@@ -1,0 +1,12 @@
+{
+  "domain": "bonusdrive",
+  "name": "BonusDrive",
+  "codeowners": [
+    "@xathon"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/xathon/Allianz-BonusDrive-HomeAssistant",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/xathon/Allianz-BonusDrive-HomeAssistant/issues",
+  "version": "0.1.0"
+}
