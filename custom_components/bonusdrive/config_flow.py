@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
+from homeassistant.core import callback
 from homeassistant.helpers import selector
 from slugify import slugify
 
@@ -21,6 +24,14 @@ class BonusdriveFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for Bonusdrive."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> BonusdriveOptionsFlowHandler:
+        """Get the options flow for this handler."""
+        return BonusdriveOptionsFlowHandler(config_entry)
 
     async def async_step_user(
         self,
@@ -105,3 +116,43 @@ class BonusdriveFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             password=password,
         )
         await client.async_authenticate()
+
+
+class BonusdriveOptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle options flow for Bonusdrive."""
+
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        """Initialize options flow."""
+        self.config_entry = config_entry
+
+    async def async_step_init(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> config_entries.ConfigFlowResult:
+        """Manage the options."""
+        if user_input is not None:
+            # Update the config entry data with new values
+            new_data = {**self.config_entry.data, **user_input}
+            self.hass.config_entries.async_update_entry(
+                self.config_entry,
+                data=new_data,
+            )
+            # Reload the integration to apply changes
+            await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+            return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema(
+                {
+                    vol.Optional(
+                        CONF_PHOTON_URL,
+                        default=self.config_entry.data.get(CONF_PHOTON_URL, ""),
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.URL,
+                        ),
+                    ),
+                },
+            ),
+        )

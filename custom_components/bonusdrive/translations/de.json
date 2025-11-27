@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "Geben Sie Ihre Allianz BonusDrive Zugangsdaten ein. Wenn Sie Hilfe bei der Konfiguration benötigen, schauen Sie hier: https://github.com/xathon/Allianz-BonusDrive-HomeAssistant",
+                "description": "Geben Sie Ihre Allianz BonusDrive Zugangsdaten ein.",
                 "data": {
                     "email": "E-Mail",
                     "password": "Passwort",
@@ -21,6 +21,18 @@
         },
         "abort": {
             "already_configured": "Dieses Konto ist bereits konfiguriert."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "photon_url": "Photon Geocoding URL (optional)"
+                },
+                "data_description": {
+                    "photon_url": "URL eines Photon Geocoding-Servers, um Start- und Zielkoordinaten in lesbare Adressen umzuwandeln."
+                }
+            }
         }
     },
     "entity": {

@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "Enter your Allianz BonusDrive credentials. If you need help with the configuration have a look here: https://github.com/xathon/Allianz-BonusDrive-HomeAssistant",
+                "description": "Enter your Allianz BonusDrive credentials.",
                 "data": {
                     "email": "Email",
                     "password": "Password",
@@ -21,6 +21,18 @@
         },
         "abort": {
             "already_configured": "This account is already configured."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "photon_url": "Photon Geocoding URL (optional)"
+                },
+                "data_description": {
+                    "photon_url": "URL of a Photon geocoding server to decode trip start/end coordinates into readable addresses."
+                }
+            }
         }
     },
     "entity": {
