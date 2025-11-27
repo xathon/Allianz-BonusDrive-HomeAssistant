@@ -105,9 +105,6 @@
                     "mileage": {
                         "name": "Kilometerstand"
                     },
-                    "badge_type": {
-                        "name": "Medallientyp"
-                    },
                     "level": {
                         "name": "Stufe"
                     },
@@ -135,14 +132,8 @@
                     "blue": "Blau"
                 },
                 "state_attributes": {
-                    "badge_type": {
-                        "name": "Medallientyp"
-                    },
                     "level": {
                         "name": "Stufe"
-                    },
-                    "medal": {
-                        "name": "Medaille"
                     },
                     "points_awarded": {
                         "name": "Verliehene Punkte"
@@ -150,8 +141,8 @@
                     "badge_state": {
                         "name": "Medallienstatus"
                     },
-                    "date": {
-                        "name": "Datum"
+                    "month": {
+                        "name": "Monat"
                     }
                 }
             }

@@ -177,7 +177,6 @@ class DailyBadgeSensor(BonusdriveEntity, SensorEntity):
         # Add badge info if available
         badge = self.coordinator.data.daily_badge
         if badge:
-            attrs["badge_type"] = badge.badgeType
             attrs["level"] = badge.level
             attrs["medal"] = get_medal_for_level(badge.level)
             attrs["points_awarded"] = badge.pointsAwarded
@@ -216,13 +215,11 @@ class MonthlyBadgeSensor(BonusdriveEntity, SensorEntity):
         badge = self.coordinator.data.monthly_badge
 
         attrs: dict[str, Any] = {
-            "badge_type": badge.badgeType,
             "level": badge.level,
-            "medal": get_medal_for_level(badge.level),
             "points_awarded": badge.pointsAwarded,
             "badge_state": badge.state,
-            "date": datetime.fromtimestamp(badge.date / 1000, tz=UTC).strftime(
-                "%Y-%m-%d"
+            "month": datetime.fromtimestamp(badge.date / 1000, tz=UTC).strftime(
+                "%B %Y"
             ),
         }
 
