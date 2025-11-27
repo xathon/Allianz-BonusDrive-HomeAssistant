@@ -10,6 +10,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 
+from .const import CONF_PHOTON_URL
 from .entity import BonusdriveEntity
 
 if TYPE_CHECKING:
@@ -119,10 +120,11 @@ class LastTripSensor(BonusdriveEntity, SensorEntity):
                 attrs["end_longitude"] = f"{lon_dir} {abs(end_point[1]):.6f}"
 
         # Add location strings if available (from Photon geocoding)
-        if hasattr(trip, "start_point_string") and trip.start_point_string:
-            attrs["start_location"] = trip.start_point_string
-        if hasattr(trip, "end_point_string") and trip.end_point_string:
-            attrs["end_location"] = trip.end_point_string
+        if self.coordinator.config_entry.data.get(CONF_PHOTON_URL):
+            if hasattr(trip, "start_point_string") and trip.start_point_string:
+                attrs["start_location"] = trip.start_point_string
+            if hasattr(trip, "end_point_string") and trip.end_point_string:
+                attrs["end_location"] = trip.end_point_string
 
         # Add detailed scores if available
         if scores:
