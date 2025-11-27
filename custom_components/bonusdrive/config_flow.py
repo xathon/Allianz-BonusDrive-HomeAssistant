@@ -1,25 +1,24 @@
-"""Adds config flow for Blueprint."""
+"""Adds config flow for Bonusdrive."""
 
 from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers import selector
-from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from slugify import slugify
 
 from .api import (
-    IntegrationBlueprintApiClient,
-    IntegrationBlueprintApiClientAuthenticationError,
-    IntegrationBlueprintApiClientCommunicationError,
-    IntegrationBlueprintApiClientError,
+    BonusdriveApiClient,
+    BonusdriveApiClientAuthenticationError,
+    BonusdriveApiClientCommunicationError,
+    BonusdriveApiClientError,
 )
-from .const import DOMAIN, LOGGER
+from .const import CONF_BASE_URL, CONF_PHOTON_URL, DEFAULT_BASE_URL, DOMAIN, LOGGER
 
 
-class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Config flow for Blueprint."""
+class BonusdriveFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
+    """Config flow for Bonusdrive."""
 
     VERSION = 1
 
@@ -32,29 +31,32 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 await self._test_credentials(
-                    username=user_input[CONF_USERNAME],
+                    base_url=user_input.get(CONF_BASE_URL, DEFAULT_BASE_URL),
+                    email=user_input[CONF_EMAIL],
                     password=user_input[CONF_PASSWORD],
                 )
-            except IntegrationBlueprintApiClientAuthenticationError as exception:
+            except BonusdriveApiClientAuthenticationError as exception:
                 LOGGER.warning(exception)
                 _errors["base"] = "auth"
-            except IntegrationBlueprintApiClientCommunicationError as exception:
+            except BonusdriveApiClientCommunicationError as exception:
                 LOGGER.error(exception)
                 _errors["base"] = "connection"
-            except IntegrationBlueprintApiClientError as exception:
+            except BonusdriveApiClientError as exception:
                 LOGGER.exception(exception)
                 _errors["base"] = "unknown"
             else:
+                # Ensure base_url is saved in data
+                data = {**user_input}
+                if CONF_BASE_URL not in data:
+                    data[CONF_BASE_URL] = DEFAULT_BASE_URL
+
                 await self.async_set_unique_id(
-                    ## Do NOT use this in production code
-                    ## The unique_id should never be something that can change
-                    ## https://developers.home-assistant.io/docs/config_entries_config_flow_handler#unique-ids
-                    unique_id=slugify(user_input[CONF_USERNAME])
+                    unique_id=slugify(user_input[CONF_EMAIL])
                 )
                 self._abort_if_unique_id_configured()
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME],
-                    data=user_input,
+                    title=user_input[CONF_EMAIL],
+                    data=data,
                 )
 
         return self.async_show_form(
@@ -62,11 +64,11 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_USERNAME,
-                        default=(user_input or {}).get(CONF_USERNAME, vol.UNDEFINED),
+                        CONF_EMAIL,
+                        default=(user_input or {}).get(CONF_EMAIL, vol.UNDEFINED),
                     ): selector.TextSelector(
                         selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT,
+                            type=selector.TextSelectorType.EMAIL,
                         ),
                     ),
                     vol.Required(CONF_PASSWORD): selector.TextSelector(
@@ -74,16 +76,32 @@ class BlueprintFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                             type=selector.TextSelectorType.PASSWORD,
                         ),
                     ),
+                    vol.Optional(
+                        CONF_BASE_URL,
+                        default=DEFAULT_BASE_URL,
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.URL,
+                        ),
+                    ),
+                    vol.Optional(
+                        CONF_PHOTON_URL,
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.URL,
+                        ),
+                    ),
                 },
             ),
             errors=_errors,
         )
 
-    async def _test_credentials(self, username: str, password: str) -> None:
+    async def _test_credentials(self, base_url: str, email: str, password: str) -> None:
         """Validate credentials."""
-        client = IntegrationBlueprintApiClient(
-            username=username,
+        client = BonusdriveApiClient(
+            hass=self.hass,
+            base_url=base_url,
+            email=email,
             password=password,
-            session=async_create_clientsession(self.hass),
         )
-        await client.async_get_data()
+        await client.async_authenticate()

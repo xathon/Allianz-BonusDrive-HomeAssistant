@@ -2,6 +2,9 @@
     "name": "xathon/Allianz-BonusDrive-HomeAssistant",
     "image": "mcr.microsoft.com/devcontainers/python:3.13",
     "postCreateCommand": "scripts/setup",
+    "containerEnv": {
+        "PYTHONPATH": "/workspace"
+    },
     "forwardPorts": [
         8123
     ],

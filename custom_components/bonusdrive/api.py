@@ -1,101 +1,159 @@
-"""Sample API Client."""
+"""API Client for Allianz BonusDrive."""
 
 from __future__ import annotations
 
-import socket
-from typing import Any
+from typing import TYPE_CHECKING
 
-import aiohttp
-import async_timeout
+from allianz_bonusdrive_client import (
+    Badge,
+    BonusdriveAPIClient,
+    Scores,
+    Trip,
+)
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
 
 
-class IntegrationBlueprintApiClientError(Exception):
+class BonusdriveApiClientError(Exception):
     """Exception to indicate a general API error."""
 
 
-class IntegrationBlueprintApiClientCommunicationError(
-    IntegrationBlueprintApiClientError,
-):
+class BonusdriveApiClientCommunicationError(BonusdriveApiClientError):
     """Exception to indicate a communication error."""
 
 
-class IntegrationBlueprintApiClientAuthenticationError(
-    IntegrationBlueprintApiClientError,
-):
+class BonusdriveApiClientAuthenticationError(BonusdriveApiClientError):
     """Exception to indicate an authentication error."""
 
 
-def _verify_response_or_raise(response: aiohttp.ClientResponse) -> None:
-    """Verify that the response is valid."""
-    if response.status in (401, 403):
-        msg = "Invalid credentials"
-        raise IntegrationBlueprintApiClientAuthenticationError(
-            msg,
-        )
-    response.raise_for_status()
-
-
-class IntegrationBlueprintApiClient:
-    """Sample API Client."""
+class BonusdriveApiClient:
+    """Async wrapper for the Allianz BonusDrive API Client."""
 
     def __init__(
         self,
-        username: str,
+        hass: HomeAssistant,
+        base_url: str,
+        email: str,
         password: str,
-        session: aiohttp.ClientSession,
+        photon_url: str | None = None,
     ) -> None:
-        """Sample API Client."""
-        self._username = username
-        self._password = password
-        self._session = session
-
-    async def async_get_data(self) -> Any:
-        """Get data from the API."""
-        return await self._api_wrapper(
-            method="get",
-            url="https://jsonplaceholder.typicode.com/posts/1",
+        """Initialize the API client."""
+        self._hass = hass
+        self._client = BonusdriveAPIClient(
+            base_url=base_url,
+            email=email,
+            password=password,
+            tgt=None,
+            photon_url=photon_url,
         )
+        self._authenticated = False
 
-    async def async_set_title(self, value: str) -> Any:
-        """Get data from the API."""
-        return await self._api_wrapper(
-            method="patch",
-            url="https://jsonplaceholder.typicode.com/posts/1",
-            data={"title": value},
-            headers={"Content-type": "application/json; charset=UTF-8"},
-        )
-
-    async def _api_wrapper(
-        self,
-        method: str,
-        url: str,
-        data: dict | None = None,
-        headers: dict | None = None,
-    ) -> Any:
-        """Get information from the API."""
+    async def async_authenticate(self) -> None:
+        """Authenticate with the API."""
         try:
-            async with async_timeout.timeout(10):
-                response = await self._session.request(
-                    method=method,
-                    url=url,
-                    headers=headers,
-                    json=data,
-                )
-                _verify_response_or_raise(response)
-                return await response.json()
+            await self._hass.async_add_executor_job(self._client.authenticate)
+            self._authenticated = True
+        except Exception as exception:
+            msg = str(exception)
+            if "401" in msg or "403" in msg or "auth" in msg.lower():
+                raise BonusdriveApiClientAuthenticationError(msg) from exception
+            raise BonusdriveApiClientCommunicationError(msg) from exception
 
-        except TimeoutError as exception:
-            msg = f"Timeout error fetching information - {exception}"
-            raise IntegrationBlueprintApiClientCommunicationError(
-                msg,
-            ) from exception
-        except (aiohttp.ClientError, socket.gaierror) as exception:
-            msg = f"Error fetching information - {exception}"
-            raise IntegrationBlueprintApiClientCommunicationError(
-                msg,
-            ) from exception
-        except Exception as exception:  # pylint: disable=broad-except
-            msg = f"Something really wrong happened! - {exception}"
-            raise IntegrationBlueprintApiClientError(
-                msg,
-            ) from exception
+    async def async_get_scores(
+        self,
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> dict[str, Scores] | list:
+        """Get driving scores from the API."""
+        if not self._authenticated:
+            await self.async_authenticate()
+
+        try:
+            kwargs = {}
+            if start_date:
+                kwargs["startDate"] = start_date
+            if end_date:
+                kwargs["endDate"] = end_date
+
+            result = await self._hass.async_add_executor_job(
+                lambda: self._client.get_scores(**kwargs)
+            )
+        except ValueError:
+            # JSON decode error - API returned empty response (no scores)
+            return {}
+        except Exception as exception:
+            msg = f"Error fetching scores: {exception}"
+            raise BonusdriveApiClientCommunicationError(msg) from exception
+        else:
+            return result if result else {}
+
+    async def async_get_trips(
+        self,
+        amount: int = 10,
+        offset: int = 0,
+    ) -> list[Trip]:
+        """Get trips from the API."""
+        if not self._authenticated:
+            await self.async_authenticate()
+
+        try:
+            return await self._hass.async_add_executor_job(
+                lambda: self._client.get_trips(amount=amount, offset=offset)
+            )
+        except Exception as exception:
+            msg = f"Error fetching trips: {exception}"
+            raise BonusdriveApiClientCommunicationError(msg) from exception
+
+    async def async_get_badges(
+        self,
+        badge_type: str = "daily",
+        start_date: str | None = None,
+        end_date: str | None = None,
+    ) -> list[Badge]:
+        """Get badges from the API."""
+        if not self._authenticated:
+            await self.async_authenticate()
+
+        try:
+            kwargs = {"type": badge_type}
+            if start_date:
+                kwargs["startDate"] = start_date
+            if end_date:
+                kwargs["endDate"] = end_date
+
+            result = await self._hass.async_add_executor_job(
+                lambda: self._client.get_badges(**kwargs)
+            )
+        except ValueError:
+            # JSON decode error - API returned empty response (no badges)
+            return []
+        except Exception as exception:
+            msg = f"Error fetching badges: {exception}"
+            raise BonusdriveApiClientCommunicationError(msg) from exception
+        else:
+            return result if result else []
+
+    async def async_get_vehicle_id(self) -> str:
+        """Get the vehicle ID."""
+        if not self._authenticated:
+            await self.async_authenticate()
+
+        try:
+            return await self._hass.async_add_executor_job(self._client.get_vehicleId)
+        except Exception as exception:
+            msg = f"Error fetching vehicle ID: {exception}"
+            raise BonusdriveApiClientCommunicationError(msg) from exception
+
+    async def async_get_trip_details(self, trip_id: str) -> Trip:
+        """Get detailed trip information including geocoded locations."""
+        if not self._authenticated:
+            await self.async_authenticate()
+
+        try:
+            return await self._hass.async_add_executor_job(
+                lambda: self._client.get_trip_details(trip_id)
+            )
+        except Exception as exception:
+            msg = f"Error fetching trip details: {exception}"
+            raise BonusdriveApiClientCommunicationError(msg) from exception

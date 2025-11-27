@@ -2,156 +2,156 @@
     "config": {
         "step": {
             "user": {
-                "description": "Enter your Allianz BonusDrive credentials. If you need help with the configuration have a look here: https://github.com/xathon/Allianz-BonusDrive-HomeAssistant",
+                "description": "Geben Sie Ihre Allianz BonusDrive Zugangsdaten ein. Wenn Sie Hilfe bei der Konfiguration benötigen, schauen Sie hier: https://github.com/xathon/Allianz-BonusDrive-HomeAssistant",
                 "data": {
-                    "email": "Email",
-                    "password": "Password",
-                    "base_url": "API Base URL (optional)",
+                    "email": "E-Mail",
+                    "password": "Passwort",
+                    "base_url": "API Basis-URL (optional)",
                     "photon_url": "Photon Geocoding URL (optional)"
                 },
                 "data_description": {
-                    "photon_url": "URL of a Photon geocoding server to decode trip start/end coordinates into readable addresses."
+                    "photon_url": "URL eines Photon Geocoding-Servers, um Start- und Zielkoordinaten in lesbare Adressen umzuwandeln."
                 }
             }
         },
         "error": {
-            "auth": "Invalid email or password.",
-            "connection": "Unable to connect to the BonusDrive server.",
-            "unknown": "Unknown error occurred."
+            "auth": "Ungültige E-Mail oder Passwort.",
+            "connection": "Verbindung zum BonusDrive-Server nicht möglich.",
+            "unknown": "Ein unbekannter Fehler ist aufgetreten."
         },
         "abort": {
-            "already_configured": "This account is already configured."
+            "already_configured": "Dieses Konto ist bereits konfiguriert."
         }
     },
     "entity": {
         "sensor": {
             "last_trip": {
-                "name": "Last Trip",
+                "name": "Letzte Fahrt",
                 "state_attributes": {
                     "trip_id": {
-                        "name": "Trip ID"
+                        "name": "Fahrt-ID"
                     },
                     "distance_km": {
-                        "name": "Distance (km)"
+                        "name": "Entfernung (km)"
                     },
                     "duration": {
-                        "name": "Duration"
+                        "name": "Fahrtdauer"
                     },
                     "avg_speed_kmh": {
-                        "name": "Average Speed (km/h)"
+                        "name": "Durchschnittsgeschwindigkeit (km/h)"
                     },
                     "max_speed_kmh": {
-                        "name": "Maximum Speed (km/h)"
+                        "name": "Höchstgeschwindigkeit (km/h)"
                     },
                     "start_time": {
-                        "name": "Start Time"
+                        "name": "Startzeit"
                     },
                     "end_time": {
-                        "name": "End Time"
+                        "name": "Endzeit"
                     },
                     "start_latitude": {
-                        "name": "Start Latitude"
+                        "name": "Start-Breitengrad"
                     },
                     "start_longitude": {
-                        "name": "Start Longitude"
+                        "name": "Start-Längengrad"
                     },
                     "end_latitude": {
-                        "name": "End Latitude"
+                        "name": "Ziel-Breitengrad"
                     },
                     "end_longitude": {
-                        "name": "End Longitude"
+                        "name": "Ziel-Längengrad"
                     },
                     "start_location": {
-                        "name": "Start Location"
+                        "name": "Startort"
                     },
                     "end_location": {
-                        "name": "End Location"
+                        "name": "Zielort"
                     },
                     "speeding_score": {
-                        "name": "Speeding Score"
+                        "name": "Geschwindigkeitswertung"
                     },
                     "harsh_braking_score": {
-                        "name": "Harsh Braking Score"
+                        "name": "Bremsverhalten"
                     },
                     "harsh_acceleration_score": {
-                        "name": "Harsh Acceleration Score"
+                        "name": "Beschleunigung"
                     },
                     "harsh_cornering_score": {
-                        "name": "Harsh Cornering Score"
+                        "name": "Kurvenfahrverhalten"
                     },
                     "payd_score": {
-                        "name": "Day, Time, Road Type Score"
+                        "name": "Tag, Zeit, Straßenart"
                     }
                 }
             },
             "daily_badge": {
-                "name": "Daily Score",
+                "name": "Tageswertung",
                 "state_attributes": {
                     "speeding_score": {
-                        "name": "Speeding Score"
+                        "name": "Geschwindigkeitswertung"
                     },
                     "harsh_braking_score": {
-                        "name": "Harsh Braking Score"
+                        "name": "Bremsverhalten"
                     },
                     "harsh_acceleration_score": {
-                        "name": "Harsh Acceleration Score"
+                        "name": "Beschleunigung"
                     },
                     "harsh_cornering_score": {
-                        "name": "Harsh Cornering Score"
+                        "name": "Kurvenfahrverhalten"
                     },
                     "payd_score": {
-                        "name": "Day, Time, Road Type Score"
+                        "name": "Tag, Zeit, Straßenart"
                     },
                     "mileage": {
-                        "name": "Mileage"
+                        "name": "Kilometerstand"
                     },
                     "badge_type": {
-                        "name": "Badge Type"
+                        "name": "Medallientyp"
                     },
                     "level": {
-                        "name": "Level"
+                        "name": "Stufe"
                     },
                     "medal": {
-                        "name": "Medal"
+                        "name": "Medaille"
                     },
                     "points_awarded": {
-                        "name": "Points Awarded"
+                        "name": "Verliehene Punkte"
                     },
                     "badge_state": {
-                        "name": "Badge State"
+                        "name": "Medallienstatus"
                     },
                     "date": {
-                        "name": "Date"
+                        "name": "Datum"
                     }
                 }
             },
             "monthly_badge": {
-                "name": "Monthly Badge",
+                "name": "Monatsmedaille",
                 "state": {
                     "gold": "Gold",
-                    "silver": "Silver",
+                    "silver": "Silber",
                     "bronze": "Bronze",
-                    "red": "Red",
-                    "blue": "Blue"
+                    "red": "Rot",
+                    "blue": "Blau"
                 },
                 "state_attributes": {
                     "badge_type": {
-                        "name": "Badge Type"
+                        "name": "Medallientyp"
                     },
                     "level": {
-                        "name": "Level"
+                        "name": "Stufe"
                     },
                     "medal": {
-                        "name": "Medal"
+                        "name": "Medaille"
                     },
                     "points_awarded": {
-                        "name": "Points Awarded"
+                        "name": "Verliehene Punkte"
                     },
                     "badge_state": {
-                        "name": "Badge State"
+                        "name": "Medallienstatus"
                     },
                     "date": {
-                        "name": "Date"
+                        "name": "Datum"
                     }
                 }
             }
