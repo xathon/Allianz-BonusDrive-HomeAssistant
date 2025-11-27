@@ -44,6 +44,11 @@ Add the integration via **Settings → Devices & Services → Add Integration �
 
 The Photon URL can also be added or changed later via **Settings → Devices & Services → Allianz BonusDrive → Configure**.
 
+## Disclaimer
+- The client used for the requests pretends to be the BonusDrive app, using HTTP headers. This a) may break at any point and b) is very much not intended behavior and might be against ToS, no idea. Though I did actually check the TOS and they didn't say that automatic requests weren't allowed (which actually surprises me, lots of companies do that). Home Assistant queries every 15 minutes, which should be fine? I'm not responsible if anything happens to your account, insurance contract, Club Penguin membership, yada yada.
+- I haven't yet found out how long a TGT is valid, or if it expires at any point. STs are invalidated after each use (successful or not), good job!
+- LLMs have been involved in creating and debugging this program. I *mostly* know what I'm doing, so that should be fine? See above for my responsibilities.
+
 ## Credits
 
 Uses the [Allianz BonusDrive Client](https://github.com/xathon/Allianz-BonusDrive-Client) library.
