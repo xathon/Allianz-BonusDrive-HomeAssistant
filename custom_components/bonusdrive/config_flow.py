@@ -28,10 +28,10 @@ class BonusdriveFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(
-        config_entry: config_entries.ConfigEntry,
+        _config_entry: config_entries.ConfigEntry,
     ) -> BonusdriveOptionsFlowHandler:
         """Get the options flow for this handler."""
-        return BonusdriveOptionsFlowHandler(config_entry)
+        return BonusdriveOptionsFlowHandler()
 
     async def async_step_user(
         self,
@@ -120,10 +120,6 @@ class BonusdriveFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
 class BonusdriveOptionsFlowHandler(config_entries.OptionsFlow):
     """Handle options flow for Bonusdrive."""
-
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        self.config_entry = config_entry
 
     async def async_step_init(
         self,
