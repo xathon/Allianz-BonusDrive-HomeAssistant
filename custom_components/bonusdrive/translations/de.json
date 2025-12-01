@@ -97,7 +97,7 @@
                 }
             },
             "daily_badge": {
-                "name": "Tageswertung",
+                "name": "Tagesmedallie",
                 "state_attributes": {
                     "speeding_score": {
                         "name": "Geschwindigkeitswertung"

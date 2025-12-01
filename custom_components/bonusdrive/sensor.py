@@ -28,7 +28,7 @@ MEDAL_LEVELS: dict[int, str] = {
     3: "bronze",
     5: "red",
 }
-DEFAULT_MEDAL = "blue"
+DEFAULT_MEDAL = "none"
 
 # Minimum number of coordinates needed for lat/lon pair
 MIN_COORD_LENGTH = 2
@@ -60,7 +60,7 @@ class LastTripSensor(BonusdriveEntity, SensorEntity):
     """Sensor for the last trip with detailed attributes."""
 
     _attr_translation_key = "last_trip"
-    _attr_icon = "mdi:car"
+    _attr_icon = "mdi:car-connected"
     _attr_state_class = SensorStateClass.MEASUREMENT
 
     def __init__(self, coordinator: BonusdriveDataUpdateCoordinator) -> None:
@@ -150,10 +150,10 @@ class DailyBadgeSensor(BonusdriveEntity, SensorEntity):
         self._attr_unique_id = f"{coordinator.config_entry.entry_id}_daily_badge"
 
     @property
-    def native_value(self) -> int | None:
+    def native_value(self) -> str | None:
         """Return the overall daily score."""
         if self.coordinator.data and self.coordinator.data.daily_scores:
-            return int(self.coordinator.data.daily_scores.overall)
+            return str(self.coordinator.data.daily_scores.overall)
         return None
 
     @property

@@ -97,7 +97,7 @@
                 }
             },
             "daily_badge": {
-                "name": "Daily Score",
+                "name": "Daily Badge",
                 "state_attributes": {
                     "speeding_score": {
                         "name": "Speeding Score"
