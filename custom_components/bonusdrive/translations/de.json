@@ -44,7 +44,7 @@
                         "name": "Fahrt-ID"
                     },
                     "distance_km": {
-                        "name": "Entfernung (km)"
+                        "name": "Fahrtstrecke (km)"
                     },
                     "duration": {
                         "name": "Fahrtdauer"
