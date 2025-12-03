@@ -26,6 +26,7 @@ MEDAL_LEVELS: dict[int, str] = {
     1: "gold",
     2: "silver",
     3: "bronze",
+    4: "blue",
     5: "red",
 }
 DEFAULT_MEDAL = "none"
@@ -90,9 +91,9 @@ class LastTripSensor(BonusdriveEntity, SensorEntity):
         duration_str = f"{hours}:{minutes:02d}:{seconds:02d}"
 
         attrs: dict[str, Any] = {
-            "trip_id": trip.tripId,
             "distance_km": round(trip.kilometers, 2),
             "duration": duration_str,
+            "driven_by": trip.user.publicDisplayName if trip.user else None,
             "avg_speed_kmh": round(trip.avgKilometersPerHour, 1),
             "max_speed_kmh": round(trip.maxKilometersPerHour, 1),
             "start_time": datetime.fromtimestamp(
@@ -142,7 +143,6 @@ class DailyBadgeSensor(BonusdriveEntity, SensorEntity):
 
     _attr_translation_key = "daily_badge"
     _attr_icon = "mdi:medal"
-    _attr_state_class = SensorStateClass.MEASUREMENT
 
     def __init__(self, coordinator: BonusdriveDataUpdateCoordinator) -> None:
         """Initialize the sensor."""
@@ -152,8 +152,8 @@ class DailyBadgeSensor(BonusdriveEntity, SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the overall daily score."""
-        if self.coordinator.data and self.coordinator.data.daily_scores:
-            return str(self.coordinator.data.daily_scores.overall)
+        if self.coordinator.data and self.coordinator.data.daily_badge:
+            return str(get_medal_for_level(self.coordinator.data.daily_badge.level))
         return None
 
     @property
@@ -163,16 +163,6 @@ class DailyBadgeSensor(BonusdriveEntity, SensorEntity):
             return None
 
         attrs: dict[str, Any] = {}
-
-        # Add detailed scores if available
-        scores = self.coordinator.data.daily_scores
-        if scores:
-            attrs["speeding_score"] = round(scores.speeding, 1)
-            attrs["harsh_braking_score"] = round(scores.harsh_braking, 1)
-            attrs["harsh_acceleration_score"] = round(scores.harsh_acceleration, 1)
-            attrs["harsh_cornering_score"] = round(scores.harsh_cornering, 1)
-            attrs["payd_score"] = round(scores.payd, 1)
-            attrs["mileage"] = round(scores.mileage, 1)
 
         # Add badge info if available
         badge = self.coordinator.data.daily_badge

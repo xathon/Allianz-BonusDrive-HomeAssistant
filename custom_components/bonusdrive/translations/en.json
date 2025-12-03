@@ -93,11 +93,22 @@
                     },
                     "payd_score": {
                         "name": "Day, Time, Road Type Score"
+                    },
+                    "driven_by": {
+                        "name": "Driven By"
                     }
                 }
             },
             "daily_badge": {
                 "name": "Daily Badge",
+                "state": {
+                    "gold": "Gold",
+                    "silver": "Silver",
+                    "bronze": "Bronze",
+                    "red": "Red",
+                    "blue": "Blue",
+                    "none": "None"
+                },
                 "state_attributes": {
                     "speeding_score": {
                         "name": "Speeding Score"

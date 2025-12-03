@@ -47,19 +47,6 @@ class BonusdriveDataUpdateCoordinator(DataUpdateCoordinator[BonusdriveCoordinato
             )
             daily_badge = daily_badges[0] if daily_badges else None
 
-            # Fetch daily scores (accumulated scores for today)
-            daily_scores_result = await client.async_get_scores(
-                start_date=today,
-                end_date=today,
-            )
-            # The scores API returns a dict with date keys or "overall"
-            daily_scores = None
-            if isinstance(daily_scores_result, dict):
-                # Try to get "overall" or today's date key
-                daily_scores = daily_scores_result.get(
-                    "overall", daily_scores_result.get(today)
-                )
-
             # Fetch monthly badges (get current month's badge - may not exist)
             first_of_month = datetime.now(tz=UTC).replace(day=1).strftime("%Y-%m-%d")
             monthly_badges = await client.async_get_badges(
@@ -73,7 +60,6 @@ class BonusdriveDataUpdateCoordinator(DataUpdateCoordinator[BonusdriveCoordinato
                 last_trip=last_trip,
                 daily_badge=daily_badge,
                 monthly_badge=monthly_badge,
-                daily_scores=daily_scores,
             )
         except BonusdriveApiClientAuthenticationError as exception:
             raise ConfigEntryAuthFailed(exception) from exception
