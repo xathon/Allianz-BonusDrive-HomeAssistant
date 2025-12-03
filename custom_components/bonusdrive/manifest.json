@@ -11,5 +11,5 @@
   "requirements": [
     "allianz-bonusdrive-client>=0.5.5"
   ],
-  "version": "0.2.4"
+  "version": "0.2.5"
 }
