@@ -44,7 +44,7 @@
                         "name": "Fahrt-ID"
                     },
                     "distance_km": {
-                        "name": "Entfernung (km)"
+                        "name": "Fahrtstrecke (km)"
                     },
                     "duration": {
                         "name": "Fahrtdauer"
@@ -93,6 +93,9 @@
                     },
                     "payd_score": {
                         "name": "Tag, Zeit, Straßenart"
+                    },
+                    "driven_by": {
+                        "name": "Gefahren von"
                     }
                 }
             },

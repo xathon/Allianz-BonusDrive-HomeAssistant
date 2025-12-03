@@ -93,6 +93,9 @@
                     },
                     "payd_score": {
                         "name": "Day, Time, Road Type Score"
+                    },
+                    "driven_by": {
+                        "name": "Driven By"
                     }
                 }
             },
