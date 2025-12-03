@@ -138,10 +138,16 @@
                 "name": "Monatsmedaille",
                 "state": {
                     "gold": "Gold",
+                    "gold_partial": "Gold (projiziert)",
                     "silver": "Silber",
+                    "silver_partial": "Silber (projiziert)",
                     "bronze": "Bronze",
+                    "bronze_partial": "Bronze (projiziert)",
                     "red": "Rot",
-                    "blue": "Blau"
+                    "red_partial": "Rot (projiziert)",
+                    "blue": "Blau",
+                    "blue_partial": "Blau (projiziert)",
+                    "none": "Keine"
                 },
                 "state_attributes": {
                     "level": {
