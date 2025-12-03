@@ -149,10 +149,15 @@
                 "name": "Monthly Badge",
                 "state": {
                     "gold": "Gold",
+                    "gold_partial": "Gold (Partial)",
                     "silver": "Silver",
+                    "silver_partial": "Silver (Partial)",
                     "bronze": "Bronze",
+                    "bronze_partial": "Bronze (Partial)",
                     "red": "Red",
+                    "red_partial": "Red (Partial)",
                     "blue": "Blue",
+                    "blue_partial": "Blue (Partial)",
                     "none": "None"
                 },
                 "state_attributes": {

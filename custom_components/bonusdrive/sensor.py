@@ -192,9 +192,20 @@ class MonthlyBadgeSensor(BonusdriveEntity, SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the medal type for the monthly badge."""
-        if self.coordinator.data and self.coordinator.data.monthly_badge:
-            return get_medal_for_level(self.coordinator.data.monthly_badge.level)
-        return None
+        badge = (
+            self.coordinator.data.monthly_badge
+            if self.coordinator.data and self.coordinator.data.monthly_badge
+            else None
+        )
+        if not badge:
+            return None
+
+        medal = get_medal_for_level(badge.level)
+        if badge.state == "AWARDED":
+            return medal
+        if badge.state == "PARTIAL":
+            return f"{medal}_partial"
+        return "none"
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
