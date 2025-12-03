@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from allianz_bonusdrive_client import Badge, Scores, Trip
+    from allianz_bonusdrive_client import Badge, Trip
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.loader import Integration
 
@@ -33,4 +33,3 @@ class BonusdriveCoordinatorData:
     last_trip: Trip | None = None
     daily_badge: Badge | None = None
     monthly_badge: Badge | None = None
-    daily_scores: Scores | None = None

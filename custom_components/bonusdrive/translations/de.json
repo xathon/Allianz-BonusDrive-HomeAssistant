@@ -98,6 +98,14 @@
             },
             "daily_badge": {
                 "name": "Tagesmedallie",
+                "state": {
+                    "gold": "Gold",
+                    "silver": "Silber",
+                    "bronze": "Bronze",
+                    "red": "Rot",
+                    "blue": "Blau",
+                    "none": "Keine"
+                },
                 "state_attributes": {
                     "speeding_score": {
                         "name": "Geschwindigkeitswertung"
@@ -141,7 +149,8 @@
                     "silver": "Silber",
                     "bronze": "Bronze",
                     "red": "Rot",
-                    "blue": "Blau"
+                    "blue": "Blau",
+                    "none": "Keine"
                 },
                 "state_attributes": {
                     "level": {

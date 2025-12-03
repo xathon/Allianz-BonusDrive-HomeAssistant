@@ -98,6 +98,14 @@
             },
             "daily_badge": {
                 "name": "Daily Badge",
+                "state": {
+                    "gold": "Gold",
+                    "silver": "Silver",
+                    "bronze": "Bronze",
+                    "red": "Red",
+                    "blue": "Blue",
+                    "none": "None"
+                },
                 "state_attributes": {
                     "speeding_score": {
                         "name": "Speeding Score"
@@ -141,7 +149,8 @@
                     "silver": "Silver",
                     "bronze": "Bronze",
                     "red": "Red",
-                    "blue": "Blue"
+                    "blue": "Blue",
+                    "none": "None"
                 },
                 "state_attributes": {
                     "level": {
