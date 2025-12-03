@@ -93,6 +93,9 @@
                     },
                     "payd_score": {
                         "name": "Tag, Zeit, Straßenart"
+                    },
+                    "driven_by": {
+                        "name": "Gefahren von"
                     }
                 }
             },
