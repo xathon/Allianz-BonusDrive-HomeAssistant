@@ -9,7 +9,7 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/xathon/Allianz-BonusDrive-HomeAssistant/issues",
   "requirements": [
-    "allianz-bonusdrive-client>=0.5.6"
+    "allianz-bonusdrive-client>=0.5.7"
   ],
-  "version": "0.2.6"
+  "version": "0.2.7"
 }
