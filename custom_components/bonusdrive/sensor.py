@@ -93,7 +93,11 @@ class LastTripSensor(BonusdriveEntity, SensorEntity):
         attrs: dict[str, Any] = {
             "distance_km": round(trip.kilometers, 2),
             "duration": duration_str,
-            "driven_by": trip.user.publicDisplayName if trip.user else None,
+            "driven_by": trip.user.publicDisplayName
+            if trip.user and trip.user.publicDisplayName
+            else f"{trip.user.firstName} {trip.user.lastName}"
+            if trip.user.firstName and trip.user.lastName
+            else "Unknown",
             "avg_speed_kmh": round(trip.avgKilometersPerHour, 1),
             "max_speed_kmh": round(trip.maxKilometersPerHour, 1),
             "start_time": datetime.fromtimestamp(
